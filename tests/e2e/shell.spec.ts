@@ -37,7 +37,8 @@ test("numeric deep links select the intended module view", async ({ page }) => {
     await expect(page.getByText("Deterministic match")).toBeVisible();
 
     await page.goto("/records/4.2");
-    await expect(page.getByText("Event and form history")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Avery Morgan" })).toBeVisible();
+    await expect(page.getByText("Personal and employment information")).toBeVisible();
 });
 
 test("enters local demo mode without collecting credentials", async ({ page }) => {

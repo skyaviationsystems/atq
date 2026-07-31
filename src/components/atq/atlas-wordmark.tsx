@@ -23,7 +23,7 @@ export function AtlasWordmark({ compact = false, className }: AtlasWordmarkProps
                         height={500}
                         priority
                         className={cx(
-                            "absolute top-1/2 h-auto max-w-none -translate-y-1/2 mix-blend-screen brightness-0 invert",
+                            "absolute top-1/2 h-auto max-w-none -translate-y-1/2 mix-blend-screen",
                             compact ? "-left-[52px] w-40" : "-left-1 w-[190px]",
                         )}
                     />

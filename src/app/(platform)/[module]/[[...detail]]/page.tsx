@@ -33,5 +33,5 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
     if (!moduleDefinition) notFound();
 
-    return <WorkspaceRouter moduleId={moduleDefinition.id} initialView={detail?.[0]} />;
+    return <WorkspaceRouter moduleId={moduleDefinition.id} detail={detail} />;
 }

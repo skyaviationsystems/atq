@@ -24,6 +24,7 @@ export interface ModuleDefinition {
 
 export interface ModuleViewProps {
     initialView?: string;
+    initialEntityId?: string;
     onNavigate?: (moduleId: ModuleId, view?: string) => void;
 }
 

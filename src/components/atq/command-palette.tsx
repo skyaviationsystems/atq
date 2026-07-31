@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, Command, SearchLg, XClose } from "@untitledui/icons";
+import { ArrowRight, Command, SearchLg, Users01, XClose } from "@untitledui/icons";
 import Link from "next/link";
 import { moduleRegistry } from "@/features/modules/module-registry";
+import { recordPeople } from "@/features/records/demo-records-repository";
 
 interface CommandPaletteProps {
     isOpen: boolean;
@@ -41,6 +42,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                 context: `${module.id} · ${module.group}`,
                 href: `/${module.slug}`,
                 icon: module.icon,
+                entityType: "Workspace",
             },
             ...module.routes.map((route) => ({
                 key: `${module.id}-${route.code}`,
@@ -48,11 +50,22 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                 context: `${module.shortTitle} · ${route.code}`,
                 href: `/${module.slug}/${route.code}`,
                 icon: module.icon,
+                entityType: "Screen",
             })),
         ]);
 
         if (!normalized) return commands.slice(0, 9);
-        return commands.filter((item) => `${item.title} ${item.context}`.toLowerCase().includes(normalized)).slice(0, 12);
+
+        const people = recordPeople.map((person) => ({
+            key: `person-${person.id}`,
+            title: person.displayName,
+            context: `Employee ${person.employeeNumber} · ${person.fleetCode}/${person.seatCode} · ${person.baseCode}`,
+            href: `/records/people/${person.id}`,
+            icon: Users01,
+            entityType: "Person",
+        }));
+
+        return [...people, ...commands].filter((item) => `${item.title} ${item.context} ${item.entityType}`.toLowerCase().includes(normalized)).slice(0, 12);
     }, [query]);
 
     if (!isOpen) return null;
@@ -129,7 +142,12 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                                 <Icon className="size-5" />
                                             </span>
                                             <span className="min-w-0 flex-1">
-                                                <span className="block truncate text-sm font-semibold text-gray-900">{result.title}</span>
+                                                <span className="flex min-w-0 items-center gap-2">
+                                                    <span className="truncate text-sm font-semibold text-gray-900">{result.title}</span>
+                                                    <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-gray-600 uppercase">
+                                                        {result.entityType}
+                                                    </span>
+                                                </span>
                                                 <span className="block truncate text-xs text-gray-500">{result.context}</span>
                                             </span>
                                             <ArrowRight className="size-4 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-blue-700" />

@@ -1,8 +1,9 @@
 "use client";
 
 import { AlertCircle } from "@untitledui/icons";
+import { RecordsWorkspace } from "@/features/records";
 import { InstructorManagementWorkspace, NoNoticeWorkspace, SpecialTrackingWorkspace } from "./assurance-workspaces";
-import { CurriculumWorkspace, QualificationRulesWorkspace, RecordsWorkspace, SchedulingWorkspace } from "./core-workspaces";
+import { CurriculumWorkspace, QualificationRulesWorkspace, SchedulingWorkspace } from "./core-workspaces";
 import { AdministrationWorkspace, AnalyticsWorkspace, ComplianceWorkspace } from "./governance-workspaces";
 import { defaultModuleId, isModuleId, moduleById, moduleRegistry } from "./module-registry";
 import type { ModuleComponent, ModuleId, ModuleViewProps } from "./module-types";
@@ -40,7 +41,7 @@ export const resolveModuleId = (module: string | undefined): ModuleId | undefine
     return moduleRegistry.find((definition) => definition.slug === module)?.id;
 };
 
-export const ModuleWorkspace = ({ module, initialView, onNavigate }: ModuleWorkspaceProps) => {
+export const ModuleWorkspace = ({ module, initialView, initialEntityId, onNavigate }: ModuleWorkspaceProps) => {
     const moduleId = resolveModuleId(module);
 
     if (!moduleId) {
@@ -61,7 +62,7 @@ export const ModuleWorkspace = ({ module, initialView, onNavigate }: ModuleWorks
     }
 
     const Component = moduleComponentRegistry[moduleId];
-    return <Component initialView={initialView} onNavigate={onNavigate} />;
+    return <Component initialView={initialView} initialEntityId={initialEntityId} onNavigate={onNavigate} />;
 };
 
 export const getModuleWorkspace = (moduleId: ModuleId) => ({

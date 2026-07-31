@@ -264,7 +264,8 @@ const recordsTabs = [
     { id: "matrix", label: "Qualification matrix" },
 ] as const;
 
-export const RecordsWorkspace = ({ initialView = "population" }: ModuleViewProps) => {
+/** @deprecated Replaced by the interactive records feature in `src/features/records`. */
+export const LegacyRecordsWorkspacePreview = ({ initialView = "population" }: ModuleViewProps) => {
     const [view, setView] = useState(recordsTabs.some((tab) => tab.id === initialView) ? initialView : "population");
     return (
         <div className="min-h-full">

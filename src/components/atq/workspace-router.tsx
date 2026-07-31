@@ -7,7 +7,7 @@ import { type ModuleId, ModuleWorkspace } from "@/features/modules";
 
 interface WorkspaceRouterProps {
     moduleId: ModuleId;
-    initialView?: string;
+    detail?: string[];
 }
 
 const moduleScreenViews: Partial<Record<ModuleId, Record<string, string>>> = {
@@ -17,8 +17,8 @@ const moduleScreenViews: Partial<Record<ModuleId, Record<string, string>>> = {
         "0.7": "overview",
     },
     M4: {
-        "4.1": "population",
-        "4.2": "jacket",
+        "4.1": "people",
+        "4.2": "person",
         "4.3": "matrix",
     },
     M5: {
@@ -38,8 +38,32 @@ function resolveFormsSurface(initialView?: string): ATQWorkspaceSurface {
     return "runtime";
 }
 
-export function WorkspaceRouter({ moduleId, initialView }: WorkspaceRouterProps) {
+function resolveRecordsRoute(detail?: string[]) {
+    const [route, entityId] = detail ?? [];
+
+    if (!route || route === "people") {
+        return {
+            initialView: entityId ? "person" : "people",
+            initialEntityId: entityId,
+        };
+    }
+
+    if (route === "explorer") {
+        return { initialView: "records" };
+    }
+
+    if (route === "matrix") {
+        return { initialView: "matrix" };
+    }
+
+    return {
+        initialView: moduleScreenViews.M4?.[route] ?? route,
+    };
+}
+
+export function WorkspaceRouter({ moduleId, detail }: WorkspaceRouterProps) {
     const router = useRouter();
+    const initialView = detail?.[0];
 
     if (moduleId === "M1") {
         const surface = resolveFormsSurface(initialView);
@@ -48,6 +72,11 @@ export function WorkspaceRouter({ moduleId, initialView }: WorkspaceRouterProps)
 
     if (moduleId === "M2") {
         return <InstructorWorkspace className="-m-4 sm:-m-6" onOpenForm={() => router.push("/forms/1.14")} />;
+    }
+
+    if (moduleId === "M4") {
+        const recordsRoute = resolveRecordsRoute(detail);
+        return <ModuleWorkspace key={detail?.join("/") ?? "records"} module={moduleId} {...recordsRoute} />;
     }
 
     const resolvedView = initialView ? (moduleScreenViews[moduleId]?.[initialView] ?? initialView) : undefined;
